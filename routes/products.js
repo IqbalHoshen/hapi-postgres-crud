@@ -1,20 +1,24 @@
-const Joi = require('@hapi/joi'); 
-const userController = require('../controllers/productController');
+const Joi = require("@hapi/joi");
+const userController = require("../controllers/productController");
+const verifyToken = require("../controllers/jwtController");
 
 const routes = [
   {
-    method: 'GET',
-    path: '/product',
+    method: "GET",
+    path: "/product",
+    options: {
+      pre: [{ method: verifyToken }],
+    },
     handler: userController.getProduct,
   },
   {
-    method: 'GET',
-    path: '/product/{id}',
+    method: "GET",
+    path: "/product/{id}",
     handler: userController.getProductById,
   },
   {
-    method: 'POST',
-    path: '/product',
+    method: "POST",
+    path: "/product",
     handler: userController.createProduct,
     options: {
       validate: {
@@ -27,12 +31,13 @@ const routes = [
     },
   },
   {
-    method: 'PUT',
-    path: '/product/{id}',
+    method: "PUT",
+    path: "/product/{id}",
     handler: userController.updateProduct,
     options: {
       validate: {
         payload: Joi.object({
+          oid: Joi.number().integer().required(),
           name: Joi.string().min(3).max(100).required(),
           quantity: Joi.number().integer().min(0).required(),
           price: Joi.number().precision(2).min(0).required(),
@@ -41,8 +46,8 @@ const routes = [
     },
   },
   {
-    method: 'DELETE',
-    path: '/product/{id}',
+    method: "DELETE",
+    path: "/product/{id}",
     handler: userController.deleteProduct,
   },
 ];

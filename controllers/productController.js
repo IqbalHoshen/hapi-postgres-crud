@@ -44,7 +44,6 @@ const updateProduct = async (request, h) => {
   try {
     const id = parseInt(request.params.id);
     const { name, quantity, price } = request.payload;
-    
     const result = await pool.query(
       'UPDATE product SET name = $1, quantity = $2 , price = $3 WHERE oid = $4 RETURNING *',
       [name, quantity, price, id]
